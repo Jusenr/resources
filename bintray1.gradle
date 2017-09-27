@@ -64,8 +64,8 @@ install {
 }
 
 bintray {
-    user = BINTRAY_USER
-    key = BINTRAY_KEY
+//    user = BINTRAY_USER
+//    key = BINTRAY_KEY
     configurations = ['archives']
     pkg {
         repo = 'maven'
