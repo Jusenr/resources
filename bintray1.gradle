@@ -1,0 +1,131 @@
+apply plugin: 'com.jfrog.bintray'//ADD THIS
+apply plugin: 'maven-publish'//ADD THIS
+
+// build a jar with source files
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allGroovy
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: groovydoc) {
+    from groovydoc.destinationDir
+    classifier = 'javadoc'
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+//maven parameter
+def licenseIds = ['Apache-2.0']
+def licenseNames = ['The Apache Software License, Version 2.0']
+def licenseUrls = ['http://www.apache.org/licenses/LICENSE-2.0.txt']
+
+//ADD
+install {
+    repositories {
+        mavenInstaller {
+            pom.project {
+                // Description
+                name PROJ_ARTIFACTID
+                description PROJ_DESCRIPTION
+                url PROJ_WEBSITEURL
+
+                // Archive
+                groupId PROJ_GROUP
+                artifactId PROJ_ARTIFACTID
+                version PROJ_VERSIONNAME
+
+                // License
+                inceptionYear PROJ_INCEPTION
+                licenses {
+                    licenseNames.eachWithIndex { ln, li ->
+                        license {
+                            name ln
+                            url licenseUrls[li]
+                        }
+                    }
+                }
+                developers {
+                    developer {
+                        name PROJ_USERNAME
+                        email PROJ_EMAIL
+                    }
+                }
+                scm {
+                    connection "${PROJ_WEBSITEURL}.git"
+                    developerConnection "${PROJ_WEBSITEURL}.git"
+                    url PROJ_WEBSITEURL
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = BINTRAY_USER
+    key = BINTRAY_KEY
+    configurations = ['archives']
+    pkg {
+        repo = 'maven'
+        name = PROJ_ARTIFACTID
+        desc = PROJ_DESCRIPTION
+        websiteUrl = PROJ_WEBSITEURL
+        issueTrackerUrl = "${PROJ_WEBSITEURL}/issues"
+        vcsUrl = "${PROJ_WEBSITEURL}.git"
+        labels = PROJ_LABELS
+        licenses = licenseIds
+        publish = true
+        publicDownloadNumbers = true
+    }
+}
+
+//TIPS:
+//These dependencies must be added
+
+//dependencies {
+//    //maven
+//    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+//    classpath 'com.github.dcendents:android-maven-plugin:1.2'
+//}
+
+//allprojects {
+//    repositories {
+//        jcenter()
+//    }
+//    //Set unified encoding
+//    tasks.withType(JavaCompile) {
+//        options.encoding = "UTF-8"
+//    }
+//    //Setting unified javaDoc encoding
+//    tasks.withType(Javadoc) {
+//        options.addStringOption('Xdoclint:none', '-quiet')
+//        options.addStringOption('encoding', 'UTF-8')
+//        options.addStringOption('charSet', 'UTF-8')
+//        options.addStringOption('link', 'http://docs.oracle.com/javase/7/docs/api')
+//        options.addStringOption('windowtitle', 'androidtools')
+//        options.addBooleanOption('author', true)
+//        options.addBooleanOption('version', true)
+//    }
+//}
+
+//Add gradle.properties to the project
+
+//# maven info
+//#
+//PROJ_GROUP=com.jusenr.gradle.plugin
+//PROJ_ARTIFACTID=simple-build-gradle
+//PROJ_VERSIONNAME=1.1.5
+//#
+//PROJ_DESCRIPTION=Android project library and application switch plug-in.
+//PROJ_WEBSITEURL=https://github.com/Jusenr/android_gradle_development
+//PROJ_LABELS=['gradle', 'plugin', 'build-gradle']
+//#
+//PROJ_USERNAME=jusenr
+//PROJ_EMAIL=jusenr@163.com
+//PROJ_INCEPTION=2017
+//PROJ_VERSIONCODE=5
+
+//Terminal execute command
+//gradlew clean build install bintrayUpload -Puser=jusenr -Pkey=1234567890987654321
