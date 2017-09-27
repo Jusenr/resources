@@ -64,8 +64,8 @@ install {
 }
 
 bintray {
-//    user = BINTRAY_USER
-//    key = BINTRAY_KEY
+    user = BINTRAY_USER
+    key = BINTRAY_KEY
     configurations = ['archives']
     pkg {
         repo = 'maven'
@@ -126,6 +126,9 @@ bintray {
 //PROJ_EMAIL=jusenr@163.com
 //PROJ_INCEPTION=2017
 //PROJ_VERSIONCODE=5
+//#
+//BINTRAY_USER=jusenr
+//BINTRAY_KEY=1234567890987654321
 
 //Terminal execute command
-//gradlew clean build install bintrayUpload -Puser=jusenr -Pkey=1234567890987654321
+//gradlew build install bintrayUpload
